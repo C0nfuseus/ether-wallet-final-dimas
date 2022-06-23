@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Ether Wallet menggunakan Ethereum berbasis Proof of Stake untuk transaksi</title>
+    <link rel="stylesheet" type="text/css" href="index.css"/>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<main id="mainContent" class="">
+    <h1 id="titleMain" class="containerButton d-flex justify-content-center">Ether Wallet Dapps</h1>
+    <div id="btn2Connect">
+        <button onclick="connect2Metamask()">Sambungkan ke Metamask</button>
+        <p id="userArea">Tidak tersembung ke Metamask</p>
+        <button onclick="connect2Contract()">Hubungkan ke Smart Contract</button>
+        <p id="contractArea">Tak ada Smart Contract terdeteksi</p>
+        <button onclick="getContractAccount()">Alamat Smart Contract</button>
+        <p id="contractAccount">Tak ada Smart Contract terdeteksi</p>
+        <button onclick="getBalance()">Ambil data dari Smart Contract</button>
+        <p id="balanceArea">Tak ada Smart Contract terdeteksi</p>
+    </div>
+    <div id="btn2Interact" class="text-end">
+        <div class="containerInteract">
+            <input type="number" id="depositInput" placeholder="Masukkan jumlah Ether (dalam Wei)"><br>
+            <button onclick="depositContract()">Deposit ke Smart Contract</button><br><br>
+        </div>
+        <div class="containerInteract">
+            <input type="text" id="addressInput" placeholder="Masukkan Alamat Wallet"><br>
+            <input type="number" id="amountInput" placeholder="Masukkan jumlah Ether (dalam satuan Wei)"><br>
+            <button onclick="sendEth()">Kirim Uang</button> <br><br>
+        </div>
+        <div class="containerInteract">
+            <input type="number" id="withdrawInput" placeholder="Masukkan jumlah Ether (dalam Wei)" ><br>
+            <button onclick="withdraw()">Ambil Uang</button><br><br>
+        </div>
+        <div class="containerInteract">
+            <button onclick="withdrawAll()">Ambil Semua Uang</button><br><br>
+        </div>
+    </div>
+</main>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+<script>
+    let account;
+    const connect2Metamask = async () => {
+        if(window.ethereum !== "undefined") {
+            const accounts = await ethereum.request({method: "eth_requestAccounts"});
+            account = accounts[0];
+            document.getElementById("userArea").innerHTML = `Alamat: ${account}`;
+        }
+    }
+
+    const connect2Contract = async () => {
+        const ABI = [
+                {
+                    "inputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "constructor"
+                },
+                {
+                    "inputs": [],
+                    "name": "deposit",
+                    "outputs": [],
+                    "stateMutability": "payable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "getAddress",
+                    "outputs": [
+                        {
+                            "internalType": "address",
+                            "name": "",
+                            "type": "address"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "getBalance",
+                    "outputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "",
+                            "type": "uint256"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "owner",
+                    "outputs": [
+                        {
+                            "internalType": "address payable",
+                            "name": "",
+                            "type": "address"
+                        }
+                    ],
+                    "stateMutability": "view",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "address payable",
+                            "name": "receiver",
+                            "type": "address"
+                        },
+                        {
+                            "internalType": "uint256",
+                            "name": "_amount",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "sendEth",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [
+                        {
+                            "internalType": "uint256",
+                            "name": "_amount",
+                            "type": "uint256"
+                        }
+                    ],
+                    "name": "withdraw",
+                    "outputs": [],
+                    "stateMutability": "nonpayable",
+                    "type": "function"
+                },
+                {
+                    "inputs": [],
+                    "name": "withdrawAll",
+                    "outputs": [],
+                    "stateMutability": "payable",
+                    "type": "function"
+                }
+            ];
+        
+        Address = "0x3E7e7a8ad500ef6AB567C80cF5b334872a4223c6";
+        window.web3 = await new Web3(window.ethereum);
+        window.contract = await new window.web3.eth.Contract(ABI, Address);
+        document.getElementById("contractArea").innerHTML = "Tersambung ke Smart Contract";
+    }
+    
+    const getContractAccount = async () => {
+        const data = await window.contract.methods.getAddress().call();
+        document.getElementById("contractAccount").innerHTML = `Contract: ${data}`;
+    }
+    
+    const getBalance = async () => {
+        const data = await window.contract.methods.getBalance().call();
+        document.getElementById("balanceArea").innerHTML = `Saldo: ${data}`;
+    }
+    
+    const withdrawAll = async() => {
+        await window.contract.methods.withdrawAll().send({from: account});
+    }
+
+    const depositContract = async () => {
+        const amount = document.getElementById("depositInput").value;
+        await window.contract.methods.deposit().send({from: account, value: amount});
+    }
+    
+    const sendEth = async () => {
+        const amount = document.getElementById("amountInput").value;
+        const address = document.getElementById("addressInput").value;
+        await window.contract.methods.sendEth(address, amount).send({from: account});
+    }
+
+    const withdraw = async() => {
+        const amount = document.getElementById("withdrawInput").value;
+        await window.contract.methods.withdraw(amount).send({from: account});
+    }
+    </script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.2.7-rc.0/web3.min.js"></script>
+</body>
+</html>

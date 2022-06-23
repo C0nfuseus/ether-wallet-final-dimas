@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400&display=swap');
+
+/*  color biru : 809bce
+    color pale : 95b8d1
+    color middle green : b8e0d2
+    color honeydrew : d6eadf
+    cameo pink : eac4d5 */
+html{
+    background-color: #809bce;
+}
+
+body{
+    background-color: #809bce;
+}
+
+main{
+    font-family: 'Roboto Mono', monospace;
+    background-color: #809bce;
+    font-size: 26px;
+    font-weight: 400;
+}
+
+#titleMain{
+    font-size: 3.5vw;
+    margin-bottom: 10vh;
+}
+
+#mainContent{
+    padding-top: 20px;
+   padding-left: 20px;
+}
+
+#btn2Connect{
+    justify-content: flex-end;
+    margin: 2vmax;
+    
+}
+
+.containerInteract{
+    justify-content: end;
+    border: #95b8d1;
+    margin-top: 50px;
+}
+
+#btn2Interact{
+    width: 95vw;
+    margin: 20px;
+    justify-content: end;
+}
+
+main div button{
+    background-color: #d6eadf;
+}
+
+input{
+    width: 45vw;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
