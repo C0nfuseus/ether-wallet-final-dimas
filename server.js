@@ -11,6 +11,6 @@ app.get("/about", (req,res) => {
     res.sendFile(path.join(__dirname + "/about.html"));
 })
 
-const server = app.listen(3000);
+const server = app.listen(5000);
 const portNumber = server.address().port;
-console.log(`port: ${portNumber}`);
+console.log(`RUnning on port: ${portNumber}`);
